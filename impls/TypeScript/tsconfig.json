@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+      "declaration": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "target": "es5",
+      "noEmitHelpers": true,
+      "pretty": true,
+      "removeComments": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "inlineSources": true,
+      "sourceMap": true,
+      "outDir": "./dist",
+      "typeRoots": [ "node_modules/@types" ],
+      "strictNullChecks": false    
+    },
+    "exclude": [
+      "node_modules"
+    ],
+    "angularCompilerOptions": {
+      "strictMetadataEmit": true
+    },  
+    "compileOnSave": false,
+    "buildOnSave": false
+}
