@@ -24,7 +24,7 @@ export class Reader {
 
 const tokenize = (input: string): string[] => {
     const regex = /[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"?|;.*|[^\s\[\]{}('"`,;)]*)/gm;
-    return input.match(regex);
+    return [...input.matchAll(regex)].map(match => match[1]);
 }
 
 const read_list = (reader: Reader): MalList => {
