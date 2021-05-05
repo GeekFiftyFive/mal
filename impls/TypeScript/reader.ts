@@ -1,3 +1,4 @@
+import { read } from 'fs';
 import { MalInt, MalList, MalSymbol, MalType } from './types';
 
 export class Reader {
@@ -6,7 +7,6 @@ export class Reader {
 
     constructor(tokens: string[]) {
         this.tokens = tokens;
-        console.log(tokens);
         this.position = 0;
     }
 
@@ -29,10 +29,14 @@ const tokenize = (input: string): string[] => {
 
 const read_list = (reader: Reader): MalList => {
     const mallist = new MalList();
-    let token: string = reader.next();
+    reader.next();
 
     while(reader.peek() !== undefined && reader.peek().charAt(0) != ')') {
         mallist.add(read_form(reader));
+    }
+
+    if(reader.peek() == undefined) {
+        throw new Error('unbalanced');
     }
 
     return mallist;
@@ -68,6 +72,15 @@ const read_form = (reader: Reader): MalType => {
 }
 
 export const read_str = (input: string) => {
-    const reader = new Reader(tokenize(input));
-    return read_form(reader);
+    let tokens: string[] = tokenize(input);
+    let reader = new Reader(tokens);
+    let maltype: MalType;
+
+    try {
+        maltype = read_form(reader);
+    } catch (err) {
+        console.error(err);
+    }
+
+    return maltype;
 }
