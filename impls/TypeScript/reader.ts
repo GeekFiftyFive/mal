@@ -35,7 +35,7 @@ const read_list = (reader: Reader): MalList => {
         mallist.add(read_form(reader));
     }
 
-    if(reader.peek() == undefined) {
+    if(reader.next() == undefined) {
         throw new Error('unbalanced');
     }
 
