@@ -1,6 +1,6 @@
 import { MalInt, MalList, MalSymbol, MalType } from "./types";
 
-export const pr_str = (maltype: MalType): string => {
+export const pr_str = (maltype: MalType, print_readably: boolean): string => {
     if (maltype instanceof MalSymbol) {
         return maltype.get()
     }
@@ -10,6 +10,6 @@ export const pr_str = (maltype: MalType): string => {
     }
 
     if (maltype instanceof MalList) {
-        return `(${maltype.getList().map(pr_str).join(' ')})`;
+        return `(${maltype.getList().map((child) => pr_str(child, print_readably)).join(' ')})`;
     }
 };

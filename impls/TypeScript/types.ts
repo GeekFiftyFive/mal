@@ -3,12 +3,12 @@ export abstract class MalType {};
 export class MalList extends MalType {
     private list: MalType[] = [];
 
-    getList(): MalType[] {
+    getList(): MalType[] | unknown[] {
         return this.list;
     }
 
-    add(maltype: MalType) {
-        this.list.push(maltype);
+    add(...maltype: MalType[]) {
+        this.list.push(...maltype);
     }
 };
 

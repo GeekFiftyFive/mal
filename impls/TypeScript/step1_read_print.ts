@@ -18,7 +18,7 @@ const EVAL = (maltype: MalType) => {
 };
 
 const PRINT = (maltype: MalType) => {
-    return pr_str(maltype);
+    return pr_str(maltype, true);
 };
 
 const rep = (arg1: string) => {
