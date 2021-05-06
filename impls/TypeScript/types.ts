@@ -37,3 +37,16 @@ export class MalSymbol extends MalType {
         return this.value;
     }
 }
+
+export class MalFunction extends MalType {
+    private behaviour: (...args: MalType[]) => MalType;
+
+    constructor(behaviour: (...args: MalType[]) => MalType) {
+        super();
+        this.behaviour = behaviour;
+    }
+
+    exec(...args: MalType[]): MalType {
+        return this.behaviour(args);
+    }
+}
