@@ -89,7 +89,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                         }
                         newEnv.set(name, EVAL(val, newEnv));
                     });
-                    return eval_ast(ast.getList()[2], newEnv);
+                    return EVAL(ast.getList()[2], newEnv);
             }
         }
 
