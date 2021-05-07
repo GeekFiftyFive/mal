@@ -5,6 +5,10 @@ import { MalFunction, MalInt, MalList, MalSymbol, MalType } from './types';
 import { Env } from './env';
 
 process.stdin.setEncoding('utf-8');
+
+const lisp_def = 'def!';
+const lisp_let = 'let*';
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -32,13 +36,8 @@ const READ = (input: string) => {
 };
 
 const eval_ast = (ast: MalType, env: Env): MalType => {
-    if (ast instanceof MalSymbol) {
-        const symbol = env.get(ast.get());
-        if(!symbol) {
-            throw new Error(`${ast.get()} undefined`);
-        }
-
-        return symbol;
+    if (ast instanceof MalSymbol && ast.get() !== lisp_def && ast.get() !== lisp_let) {
+        return env.get(ast.get());
     }
 
     if (ast instanceof MalList) {
@@ -65,50 +64,43 @@ const group_array = <T>(arr: T[]): T[][] => {
 }
 
 const EVAL = (ast: MalType, env: Env): MalType => {
-    try {
-        if (ast instanceof MalList) {
-            if (ast.getList().length === 0) {
-                return ast;
-            }
-
-            const first = ast.getList()[0];
-            if (first instanceof MalSymbol) {
-                switch(first.get()) {
-                    case '!def':
-                        const key = ast.getList()[1] as MalSymbol;
-                        const val = eval_ast(ast.getList()[2], env);
-                        env.set(key.get(), val);
-                        return val;
-                    case 'let*':
-                        const newEnv = new Env(env);
-                        const bindings = ast.getList()[1] as MalList;
-                        const grouped = group_array(bindings.getList() as MalType[]);
-                        grouped.forEach(([key, val]) => {
-                            let name: string;
-                            if (key instanceof MalSymbol) {
-                                name = key.get();
-                            } else {
-                                throw new Error('even value in pair must be symbol');
-                            }
-                            env.set(name, eval_ast(val, newEnv));
-                        });
-                        return eval_ast(bindings[2], env);
-                }
-            }
-    
-            const evaluated = eval_ast(ast, env) as MalList;
-            const op = evaluated.getList()[0] as MalFunction;
-            const args = evaluated.getList().slice(1);
-            return op.exec(...(args.map((arg) => {
-                return EVAL(arg, env);
-            })));
+    if (ast instanceof MalList) {
+        if (ast.getList().length === 0) {
+            return ast;
         }
-    
-        return eval_ast(ast, env);
-    } catch (err) {
-        console.error(err);
-        return ast;
+        const first = ast.getList()[0];
+        if (first instanceof MalSymbol) {
+            switch(first.get()) {
+                case lisp_def:
+                    const key = ast.getList()[1] as MalSymbol;
+                    const val = EVAL(ast.getList()[2], env);
+                    env.set(key.get(), val);
+                    return val;
+                case lisp_let:
+                    const newEnv = new Env(env);
+                    const bindings = ast.getList()[1] as MalList;
+                    const grouped = group_array(bindings.getList() as MalType[]);
+                    grouped.forEach(([key, val]) => {
+                        let name: string;
+                        if (key instanceof MalSymbol) {
+                            name = key.get();
+                        } else {
+                            throw new Error('even value in pair must be symbol');
+                        }
+                        env.set(name, eval_ast(val, newEnv));
+                    });
+                    return eval_ast(bindings[2], env);
+            }
+        }
+
+        const evaluated = eval_ast(ast, env) as MalList;
+        const op = evaluated.getList()[0] as MalFunction;
+        const args = evaluated.getList().slice(1);
+        return op.exec(...(args.map((arg) => {
+            return EVAL(arg, env);
+        })));
     }
+    return eval_ast(ast, env);
 };
 
 const PRINT = (maltype: MalType) => {
@@ -116,7 +108,11 @@ const PRINT = (maltype: MalType) => {
 };
 
 const rep = (arg1: string) => {
-    return PRINT(EVAL(READ(arg1), repl_env));
+    try {
+        return PRINT(EVAL(READ(arg1), repl_env));
+    } catch (err) {
+        return err.message;
+    }
 };
 
 rl.setPrompt('user> ');

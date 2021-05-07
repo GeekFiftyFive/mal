@@ -26,7 +26,7 @@ export class Env {
         const mal = this.find(key);
 
         if (mal === undefined) {
-            throw new Error(`${key} is undefined`);
+            throw new Error(`${key} not found`);
         }
 
         return mal;
