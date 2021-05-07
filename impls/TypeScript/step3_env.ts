@@ -36,7 +36,7 @@ const READ = (input: string) => {
 };
 
 const eval_ast = (ast: MalType, env: Env): MalType => {
-    if (ast instanceof MalSymbol && ast.get() !== lisp_def && ast.get() !== lisp_let) {
+    if (ast instanceof MalSymbol) {
         return env.get(ast.get());
     }
 
