@@ -87,9 +87,9 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                         } else {
                             throw new Error('even value in pair must be symbol');
                         }
-                        env.set(name, eval_ast(val, newEnv));
+                        newEnv.set(name, EVAL(val, newEnv));
                     });
-                    return eval_ast(bindings[2], env);
+                    return eval_ast(ast.getList()[2], newEnv);
             }
         }
 
