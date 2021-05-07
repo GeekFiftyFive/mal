@@ -82,8 +82,17 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     case 'let*':
                         const newEnv = new Env(env);
                         const bindings = ast.getList()[1] as MalList;
-                        const grouped = group_array(bindings.getList()) as MalType[];
-                        break;
+                        const grouped = group_array(bindings.getList() as MalType[]);
+                        grouped.forEach(([key, val]) => {
+                            let name: string;
+                            if (key instanceof MalSymbol) {
+                                name = key.get();
+                            } else {
+                                throw new Error('even value in pair must be symbol');
+                            }
+                            env.set(name, eval_ast(val, newEnv));
+                        });
+                        return eval_ast(bindings[2], env);
                 }
             }
     
