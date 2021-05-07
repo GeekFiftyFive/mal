@@ -99,7 +99,9 @@ const EVAL = (ast: MalType, env: Env): MalType => {
             const evaluated = eval_ast(ast, env) as MalList;
             const op = evaluated.getList()[0] as MalFunction;
             const args = evaluated.getList().slice(1);
-            return op.exec(...args);
+            return op.exec(...(args.map((arg) => {
+                return EVAL(arg, env);
+            })));
         }
     
         return eval_ast(ast, env);

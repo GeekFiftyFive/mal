@@ -47,6 +47,6 @@ export class MalFunction extends MalType {
     }
 
     exec(...args: MalType[]): MalType {
-        return this.behaviour(args);
+        return this.behaviour(...args);
     }
 }
