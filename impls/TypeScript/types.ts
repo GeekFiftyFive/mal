@@ -50,3 +50,24 @@ export class MalFunction extends MalType {
         return this.behaviour(...args);
     }
 }
+
+export class MalBoolean extends MalType {
+    private value: boolean;
+
+    constructor(value: boolean) {
+        super()
+        this.value = value;
+    }
+
+    is() {
+        return this.value;
+    }
+}
+
+export class MalNil extends MalType {
+    public static impl = new MalNil();
+
+    private constructor() {
+        super();
+    }
+}

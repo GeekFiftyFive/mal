@@ -1,5 +1,5 @@
 import { read } from 'fs';
-import { MalInt, MalList, MalSymbol, MalType } from './types';
+import { MalBoolean, MalInt, MalList, MalNil, MalSymbol, MalType } from './types';
 
 export class Reader {
     private position: number;
@@ -45,15 +45,24 @@ const read_list = (reader: Reader): MalList => {
 const read_atom = (reader: Reader): MalType => {
     const token = reader.next();
     const number = parseInt(token);
-    let maltype: MalType;
 
-    if (isNaN(number)) {
-        maltype = new MalSymbol(token);
-    } else {
-        maltype = new MalInt(number);
+    if (!isNaN(number)) {
+        return new MalInt(number)   
     }
 
-    return maltype;
+    if (token === 'true') {
+        return new MalBoolean(true);
+    }
+
+    if (token === 'false') {
+        return new MalBoolean(false);
+    }
+
+    if (token === 'nil') {
+        return MalNil.impl;
+    }
+
+    return new MalSymbol(token);
 }
 
 const read_form = (reader: Reader): MalType => {
