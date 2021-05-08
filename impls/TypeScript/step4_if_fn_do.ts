@@ -1,8 +1,9 @@
 import * as readline from 'readline';
 import { read_str } from './reader';
 import { pr_str } from './printer';
-import { MalBoolean, MalFunction, MalInt, MalList, MalNil, MalSymbol, MalType } from './types';
+import { MalBoolean, MalFunction,  MalList, MalNil, MalSymbol, MalType } from './types';
 import { Env } from './env';
+import { ns } from './core';
 
 process.stdin.setEncoding('utf-8');
 
@@ -19,21 +20,9 @@ const rl = readline.createInterface({
 
 const repl_env = new Env();
 
-repl_env.set('+', new MalFunction((a: MalInt, b: MalInt) => {
-    return new MalInt(a.get() + b.get());
-}));
-
-repl_env.set('-', new MalFunction((a: MalInt, b: MalInt) => {
-    return new MalInt(a.get() - b.get());
-}));
-
-repl_env.set('*', new MalFunction((a: MalInt, b: MalInt) => {
-    return new MalInt(a.get() * b.get());
-}));
-
-repl_env.set('/', new MalFunction((a: MalInt, b: MalInt) => {
-    return new MalInt(Math.floor(a.get() / b.get()));
-}));
+Object.entries(ns).forEach(([key, value]) => {
+    repl_env.set(key, new MalFunction(value));
+});
 
 const READ = (input: string) => {
     return read_str(input);
