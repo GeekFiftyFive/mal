@@ -1,3 +1,5 @@
+import { Env } from "./env";
+
 export abstract class MalType {};
 
 export class MalList extends MalType {
@@ -79,5 +81,36 @@ export class MalNil extends MalType {
 
     private constructor() {
         super();
+    }
+}
+
+export class MalClosure extends MalType {
+    private ast: MalType;
+    private params: MalSymbol[];
+    private env: Env;
+    private fn: MalFunction;
+
+    constructor(ast: MalType, params: MalSymbol[], env: Env, fn: MalFunction) {
+        super();
+        this.ast = ast;
+        this.params = params;
+        this.env = env;
+        this.fn = fn;
+    }
+
+    getAst() {
+        return this.ast;
+    }
+
+    getParams() {
+        return this.params;
+    }
+
+    getEnv() {
+        return this.env;
+    }
+
+    getFn() {
+        return this.fn;
     }
 }

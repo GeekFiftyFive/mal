@@ -1,4 +1,4 @@
-import { MalBoolean, MalFunction, MalInt, MalList, MalNil, MalSymbol, MalType } from "./types";
+import { MalBoolean, MalClosure, MalFunction, MalInt, MalList, MalNil, MalSymbol, MalType } from "./types";
 
 export const pr_str = (maltype: MalType, print_readably: boolean): string => {
     if (maltype instanceof MalSymbol) {
@@ -21,7 +21,7 @@ export const pr_str = (maltype: MalType, print_readably: boolean): string => {
         return 'nil';
     }
 
-    if (maltype instanceof MalFunction) {
+    if (maltype instanceof MalFunction || maltype instanceof MalClosure) {
         return '#<function>';
     }
 };
