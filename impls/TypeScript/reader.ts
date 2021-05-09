@@ -51,15 +51,15 @@ const read_atom = (reader: Reader): MalType => {
     }
 
     if (token === 'true') {
-        return new MalBoolean(true);
+        return MalBoolean.true_singleton;
     }
 
     if (token === 'false') {
-        return new MalBoolean(false);
+        return MalBoolean.false_singleton;
     }
 
     if (token === 'nil') {
-        return MalNil.impl;
+        return MalNil.singleton;
     }
 
     return new MalSymbol(token);

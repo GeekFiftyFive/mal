@@ -90,7 +90,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     const condition = EVAL(ast.getList()[1], env);
                     if (condition instanceof MalNil || (condition instanceof MalBoolean && !condition.is())) {
                         if (ast.getList.length < 4) {
-                            return MalNil.impl;
+                            return MalNil.singleton;
                         }
 
                         return EVAL(ast.getList()[3], env);

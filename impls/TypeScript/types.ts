@@ -53,8 +53,10 @@ export class MalFunction extends MalType {
 
 export class MalBoolean extends MalType {
     private value: boolean;
+    static true_singleton = new MalBoolean(true);
+    static false_singleton = new MalBoolean(false);
 
-    constructor(value: boolean) {
+    private constructor(value: boolean) {
         super()
         this.value = value;
     }
@@ -62,10 +64,18 @@ export class MalBoolean extends MalType {
     is() {
         return this.value;
     }
+
+    static fromJSBool(value: boolean) {
+        if (value) {
+            return MalBoolean.true_singleton;
+        }
+
+        return MalBoolean.false_singleton;
+    }
 }
 
 export class MalNil extends MalType {
-    public static impl = new MalNil();
+    public static singleton = new MalNil();
 
     private constructor() {
         super();
