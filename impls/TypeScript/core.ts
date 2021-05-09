@@ -3,11 +3,11 @@ import { MalBoolean, MalInt, MalList, MalNil, MalSymbol, MalType } from "./types
 
 const checkEquality = (a: MalType, b: MalType) => {
     if (a instanceof MalSymbol && b instanceof MalSymbol) {
-        return a.get() === b.get();
+        return MalBoolean.fromJSBool(a.get() === b.get());
     }
 
     if (a instanceof MalInt && b instanceof MalInt) {
-        return a.get() === b.get();
+        return MalBoolean.fromJSBool(a.get() === b.get());
     }
 
     if (
@@ -23,11 +23,7 @@ const checkEquality = (a: MalType, b: MalType) => {
         return MalBoolean.true_singleton;
     }
 
-    if (a instanceof MalBoolean && b instanceof MalBoolean) {
-        return MalBoolean.fromJSBool(a === b);
-    }
-
-    return MalBoolean.false_singleton;
+    return MalBoolean.fromJSBool(a === b);
 };
 
 export const ns: Record<string, (...args: MalType[]) => MalType> = {
