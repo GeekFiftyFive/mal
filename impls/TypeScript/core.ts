@@ -58,8 +58,12 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
     'empty?': (a: MalType) => {
         return MalBoolean.fromJSBool(a instanceof MalList && a.getList().length === 0);
     },
-    'count': (a: MalList) => {
-        return new MalInt(a.getList().length);
+    'count': (a: MalType) => {
+        if (a instanceof MalList) {
+            return new MalInt(a.getList().length);
+        }
+
+        return new MalInt(0);
     },
     '=': checkEquality,
     '<': (a: MalInt, b: MalInt) => {

@@ -89,7 +89,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                 case lisp_if:
                     const condition = EVAL(ast.getList()[1], env);
                     if (condition instanceof MalNil || (condition instanceof MalBoolean && !condition.is())) {
-                        if (ast.getList.length < 4) {
+                        if (ast.getList().length < 4) {
                             return MalNil.singleton;
                         }
 
@@ -109,8 +109,9 @@ const EVAL = (ast: MalType, env: Env): MalType => {
         const evaluated = eval_ast(ast, env) as MalList;
         const op = evaluated.getList()[0] as MalFunction;
         const args = evaluated.getList().slice(1);
+        console.log(op);
         return op.exec(...(args.map((arg) => {
-            return EVAL(arg, env);
+            return eval_ast(arg, env);
         })));
     }
     return eval_ast(ast, env);
