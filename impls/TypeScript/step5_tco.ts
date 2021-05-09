@@ -101,7 +101,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
     
                             ast = ast.getList()[3];
                         } else {
-                            ast = ast.getList()[2], env;
+                            ast = ast.getList()[2];
                         }
                         break;
                     case lisp_fn:
@@ -116,22 +116,37 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                             env,
                             fn
                         );
-                }
-            }
-    
-            const evaluated = eval_ast(ast, env) as MalList;
-            const op = evaluated.getList()[0];
-            const args = evaluated.getList().slice(1);
+                    default:
+                        const evaluated = eval_ast(ast, env) as MalList;
+                        const op = evaluated.getList()[0];
+                        const args = evaluated.getList().slice(1);
 
-            if (op instanceof MalFunction) {
-                return op.exec(...(args.map((arg) => {
-                    return eval_ast(arg, env);
-                })));
-            } else if (op instanceof MalClosure) {
-                ast = op.getAst();
-                env = new Env(env, op.getParams(), args);
+                        if (op instanceof MalFunction) {
+                            return op.exec(...(args.map((arg) => {
+                                return eval_ast(arg, env);
+                            })));
+                        } else if (op instanceof MalClosure) {
+                            ast = op.getAst();
+                            env = new Env(env, op.getParams(), args);
+                        } else {
+                            throw new Error('op is of unknown type');
+                        }
+                }
             } else {
-                throw new Error('op is of unknown type');
+                // TODO: Refactor
+                const evaluated = eval_ast(ast, env) as MalList;
+                const op = evaluated.getList()[0];
+                const args = evaluated.getList().slice(1)
+                if (op instanceof MalFunction) {
+                    return op.exec(...(args.map((arg) => {
+                        return eval_ast(arg, env);
+                    })));
+                } else if (op instanceof MalClosure) {
+                    ast = op.getAst();
+                    env = new Env(env, op.getParams(), args);
+                } else {
+                    throw new Error('op is of unknown type');
+                }
             }
         } else {
             return eval_ast(ast, env);
