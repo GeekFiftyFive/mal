@@ -84,7 +84,9 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     });
                     return EVAL(ast.getList()[2], letEnv);
                 case lisp_do:
-                    const do_evaluated = eval_ast(ast, env) as MalList;
+                    const do_list = new MalList();
+                    do_list.add(...(ast.getList().splice(1)));
+                    const do_evaluated = eval_ast(do_list, env) as MalList;
                     return do_evaluated.getList()[do_evaluated.getList().length - 1];
                 case lisp_if:
                     const condition = EVAL(ast.getList()[1], env);

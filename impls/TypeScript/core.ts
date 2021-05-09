@@ -40,7 +40,7 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
         return new MalInt(a.get() * b.get());
     },
     'prn': (a: MalType) => {
-        pr_str(a, true);
+        console.log(pr_str(a, true));
         return MalNil.singleton;
     },
     'list': (...args: MalType[]) => {
