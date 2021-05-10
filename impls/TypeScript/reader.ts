@@ -1,5 +1,5 @@
 import { read } from 'fs';
-import { MalBoolean, MalInt, MalList, MalNil, MalSymbol, MalType } from './types';
+import { MalBoolean, MalInt, MalList, MalNil, MalString, MalSymbol, MalType } from './types';
 
 export class Reader {
     private position: number;
@@ -60,6 +60,12 @@ const read_atom = (reader: Reader): MalType => {
 
     if (token === 'nil') {
         return MalNil.singleton;
+    }
+
+    const str = new RegExp(/\"(.*)\"/gm).exec(token);
+
+    if (str) {
+        return new MalString(str[1]); 
     }
 
     return new MalSymbol(token);

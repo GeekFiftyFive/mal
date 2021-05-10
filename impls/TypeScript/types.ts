@@ -114,3 +114,16 @@ export class MalClosure extends MalType {
         return this.fn;
     }
 }
+
+export class MalString extends MalType {
+    private value: string;
+
+    constructor(value: string) {
+        super();
+        this.value = value;
+    }
+
+    get() {
+        return this.value;
+    }
+}
