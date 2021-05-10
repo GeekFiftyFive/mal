@@ -1,5 +1,6 @@
 import { pr_str } from "./printer";
-import { MalBoolean, MalInt, MalList, MalNil, MalSymbol, MalType } from "./types";
+import { read_str } from "./reader";
+import { MalBoolean, MalInt, MalList, MalNil, MalString, MalSymbol, MalType } from "./types";
 
 const checkEquality = (a: MalType, b: MalType) => {
     if (a instanceof MalSymbol && b instanceof MalSymbol) {
@@ -74,4 +75,7 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
     '>=': (a: MalInt, b: MalInt) => {
         return MalBoolean.fromJSBool(a.get() >= b.get());
     },
+    'read-string': (a: MalString) => {
+        return read_str(a.get());
+    }
 };
