@@ -24,9 +24,9 @@ Object.entries(ns).forEach(([key, value]) => {
     repl_env.set(key, new MalFunction(value));
 });
 
-repl_env.set('eval', (ast: MalType) => {
+repl_env.set('eval', new MalFunction((ast: MalType) => {
     return EVAL(ast, repl_env);
-});
+}));
 
 const READ = (input: string) => {
     return read_str(input);
@@ -136,6 +136,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                         ast = op.getAst();
                         env = new Env(env, op.getParams(), args);
                     } else {
+                        console.log(op);
                         throw new Error('op is of unknown type');
                     }
             }
