@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { pr_str } from "./printer";
 import { read_str } from "./reader";
 import { MalBoolean, MalInt, MalList, MalNil, MalString, MalSymbol, MalType } from "./types";
@@ -77,5 +78,10 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
     },
     'read-string': (a: MalString) => {
         return read_str(a.get());
+    },
+    'slurp': (a: MalString) => {
+        const filename = a.get();
+        const contents = fs.readFileSync(filename, 'utf-8');
+        return new MalString(contents);
     }
 };
