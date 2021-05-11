@@ -95,8 +95,8 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     break;
                 case lisp_do:
                     const do_list = new MalList();
-                    do_list.add(...(ast.getList().slice(1, -2)));
-                    eval_ast(do_list, env) as MalList;
+                    do_list.add(...(ast.getList().slice(1, -1)));
+                    eval_ast(do_list, env);
                     ast = ast.getList()[ast.getList().length - 1];
                     break;
                 case lisp_if:
@@ -127,11 +127,8 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     const evaluated = eval_ast(ast, env) as MalList;
                     const op = evaluated.getList()[0];
                     const args = evaluated.getList().slice(1);
-
                     if (op instanceof MalFunction) {
-                        return op.exec(...(args.map((arg) => {
-                            return eval_ast(arg, env);
-                        })));
+                        return op.exec(...args);
                     } else if (op instanceof MalClosure) {
                         ast = op.getAst();
                         env = new Env(env, op.getParams(), args);
@@ -154,9 +151,11 @@ const rep = (arg1: string) => {
     try {
         return PRINT(EVAL(READ(arg1), repl_env));
     } catch (err) {
-        return err.message;
+        console.log(err.message);
     }
 };
+
+rep('(def! load-file (fn* (f) (eval (read-string (str "(do " (slurp f) "\\nnil)")))))');
 
 rl.setPrompt('user> ');
 rl.prompt();

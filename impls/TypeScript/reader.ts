@@ -96,6 +96,6 @@ export const read_str = (input: string) => {
     } catch (err) {
         console.error(err);
     }
-
+    
     return maltype;
 }

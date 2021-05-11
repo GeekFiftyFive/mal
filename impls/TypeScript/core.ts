@@ -41,8 +41,26 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
     '*': (a: MalInt, b: MalInt) => {
         return new MalInt(a.get() * b.get());
     },
-    'prn': (a: MalType) => {
-        console.log(pr_str(a, true));
+    'pr-str': (...args: MalType[]) => {
+        return new MalString(args.map((ast) => {
+            return pr_str(ast, true)
+        }).join(' '));
+    },
+    'str': (...args: MalType[]) => {
+        return new MalString(args.map((ast) => {
+            return pr_str(ast, false)
+        }).join(''));
+    },
+    'prn': (...args: MalType[]) => {
+        console.log(args.map((ast) => {
+            return pr_str(ast, true)
+        }).join(' '));
+        return MalNil.singleton;
+    },
+    'println': (...args: MalType[]) => {
+        console.log(args.map((ast) => {
+            return pr_str(ast, false)
+        }).join(' '));
         return MalNil.singleton;
     },
     'list': (...args: MalType[]) => {

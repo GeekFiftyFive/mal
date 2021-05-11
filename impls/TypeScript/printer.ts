@@ -10,7 +10,12 @@ export const pr_str = (maltype: MalType, print_readably: boolean): string => {
     }
 
     if (maltype instanceof MalString) {
-        return `"${maltype.get()}"`;
+        if (print_readably) {
+            return `"${maltype.get()}"`;
+        }
+
+        // TODO properly handle other special characters too
+        return maltype.get().replace(/\\n/g, '\n');
     }
 
     if (maltype instanceof MalList) {
