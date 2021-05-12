@@ -106,7 +106,7 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
         return new MalAtom(a);
     },
     'atom?': (a: MalType) => {
-        return a instanceof MalAtom;
+        return MalBoolean.fromJSBool(a instanceof MalAtom);
     },
     'deref': (a: MalAtom) => {
         return a.get();
