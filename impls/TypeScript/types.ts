@@ -127,3 +127,20 @@ export class MalString extends MalType {
         return this.value;
     }
 }
+
+export class MalAtom extends MalType {
+    private value: MalType;
+
+    constructor(value: MalType) {
+        super();
+        this.value = value;
+    }
+
+    get() {
+        return this.value;
+    }
+
+    set(value: MalType) {
+        this.value = value;
+    }
+}

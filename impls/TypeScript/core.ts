@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { pr_str } from "./printer";
 import { read_str } from "./reader";
-import { MalBoolean, MalInt, MalList, MalNil, MalString, MalSymbol, MalType } from "./types";
+import { MalAtom, MalBoolean, MalClosure, MalFunction, MalInt, MalList, MalNil, MalString, MalSymbol, MalType } from "./types";
 
 const checkEquality = (a: MalType, b: MalType) => {
     if (a instanceof MalSymbol && b instanceof MalSymbol) {
@@ -101,5 +101,27 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
         const filename = a.get();
         const contents = fs.readFileSync(filename, 'utf-8');
         return new MalString(contents);
+    },
+    'atom': (a: MalType) => {
+        return new MalAtom(a);
+    },
+    'atom?': (a: MalType) => {
+        return a instanceof MalAtom;
+    },
+    'deref': (a: MalAtom) => {
+        return a.get();
+    },
+    'reset!': (atom: MalAtom, mal: MalType) => {
+        atom.set(mal);
+        return mal;
+    },
+    'swap!': (atom: MalAtom, func: MalFunction | MalClosure, ...args: MalType[]) => {
+        if (func instanceof MalClosure) {
+            func = func.getFn();
+        }
+
+        args.unshift(atom.get());
+        atom.set(func.exec(...args));
+        return atom.get();
     }
 };
