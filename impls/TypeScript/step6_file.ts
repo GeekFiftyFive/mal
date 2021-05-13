@@ -131,7 +131,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                         return op.exec(...args);
                     } else if (op instanceof MalClosure) {
                         ast = op.getAst();
-                        env = new Env(env, op.getParams(), args);
+                        env = new Env(op.getEnv(), op.getParams(), args);
                     } else {
                         console.log(op);
                         throw new Error('op is of unknown type');
