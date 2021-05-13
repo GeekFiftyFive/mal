@@ -119,7 +119,7 @@ export const ns: Record<string, (...args: MalType[]) => MalType> = {
         if (func instanceof MalClosure) {
             func = func.getFn();
         }
-
+        
         args.unshift(atom.get());
         atom.set(func.exec(...args));
         return atom.get();

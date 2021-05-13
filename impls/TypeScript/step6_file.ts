@@ -115,7 +115,7 @@ const EVAL = (ast: MalType, env: Env): MalType => {
                     const fn = new MalFunction((...exprs: MalType[]) => {
                         const binds = ((ast as MalList).getList()[1] as MalList).getList() as MalSymbol[];
                         const fnEnv = new Env(env, binds, exprs);
-                        return EVAL((ast as MalList)[2], fnEnv); 
+                        return EVAL((ast as MalList).getList()[2], fnEnv);
                     });
                     return new MalClosure(
                         (ast as MalList).getList()[2],
