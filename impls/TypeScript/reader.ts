@@ -62,10 +62,13 @@ const read_atom = (reader: Reader): MalType => {
         return MalNil.singleton;
     }
 
-    const str = new RegExp(/\"(.*)\"/gm).exec(token);
+    const str = new RegExp(/\"([\s\S]*)\"/gm).exec(token);
 
     if (str) {
-        return new MalString(str[1]); 
+        let output = str[1].replace(/\\n/gm, '\n');
+        output = output.replace(/\\/gm, '\\');
+        output = output.replace(/\\"/gm, '\"');
+        return new MalString(output); 
     }
 
     return new MalSymbol(token);
