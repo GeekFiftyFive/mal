@@ -78,6 +78,7 @@ const read_form = (reader: Reader): MalType => {
     const token = reader.peek();
     let maltype: MalType;
 
+    // TODO: Handle vectors and hashmaps
     switch (token.charAt(0)) {
         case '(':
             maltype = read_list(reader);
